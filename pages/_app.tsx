@@ -25,14 +25,13 @@ import AuthMiddleware from '../middlewares/Auth.middleware';
 
 
 const link = createHttpLink({
-  uri: `${API}/graphql`,
-  credentials:'include',
+  uri: `${API}/graphql`
 });
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link,
-  credentials: 'include',
+  credentials: 'include'
 });
 
 const MyApp = ({ Component, pageProps } ) => {
