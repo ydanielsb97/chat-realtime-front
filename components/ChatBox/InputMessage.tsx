@@ -7,7 +7,9 @@ import {
   TextField,
   Theme,
 } from "@material-ui/core";
-import React from "react";
+import React, { useState, useContext } from "react";
+import { emitNewMessage } from "../../socket";
+import RoomContext from "../../context/RoomContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,9 +29,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 const InputMessage = () => {
 
-    const onSubmitHandler = (e: any) => {
-        e.preventDefault()
-    }
+  const [message, setMessage] = useState("")
+
+
+  const roomSelected = useContext(RoomContext)
+
+  const onSubmitHandler = (e: any) => {
+      e.preventDefault()
+    
+      console.log(roomSelected)
+      emitNewMessage(message, roomSelected);
+
+      e.target.reset();
+
+  }
+
+  const changeHandler = (e: any) => setMessage(e.target.value)
 
     
   const classes = useStyles();
@@ -44,6 +59,9 @@ const InputMessage = () => {
           placeholder="message"
           multiline
           variant="outlined"
+          name="message"
+          value={message}
+          onChange={changeHandler}
         />
         <Button
           variant="contained"
