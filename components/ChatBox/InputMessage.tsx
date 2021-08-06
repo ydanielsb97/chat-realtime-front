@@ -9,7 +9,11 @@ import {
 } from "@material-ui/core";
 import React, { useState, useContext } from "react";
 import { emitNewMessage } from "../../socket";
-import RoomContext from "../../context/RoomContext";
+import { RoomContext } from "../../context/RoomContext";
+import AuthContext from "../../context/AuthContext";
+import { MessageI } from "../../interface/Message.interface";
+import Swal from 'sweetalert2'
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,15 +36,25 @@ const InputMessage = () => {
   const [message, setMessage] = useState("")
 
 
-  const roomSelected = useContext(RoomContext)
+  const { roomSelected } = useContext(RoomContext);
+  const { auth } = useContext(AuthContext)
 
   const onSubmitHandler = (e: any) => {
       e.preventDefault()
-    
-      console.log(roomSelected)
-      emitNewMessage(message, roomSelected);
 
-      e.target.reset();
+      if(roomSelected === "Select a Room") {
+        return Swal.fire("Error", "You must to select a room", "info")
+        
+      }
+    
+      const data: MessageI = {
+        author: auth.userName,
+        text: message,
+        date: new Date()
+      }
+      emitNewMessage(data, roomSelected);
+
+      setMessage("");
 
   }
 
@@ -55,9 +69,8 @@ const InputMessage = () => {
       <div className={classes.container}>
         <TextField
           id="filled-textarea"
-          label="Write your text"
+          label="Message"
           placeholder="message"
-          multiline
           variant="outlined"
           name="message"
           value={message}
@@ -70,6 +83,7 @@ const InputMessage = () => {
           endIcon={<Icon>send</Icon>}
           type="submit"
         >
+          
           Send
         </Button>
         </div>

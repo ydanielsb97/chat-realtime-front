@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -7,7 +7,7 @@ import Divider from "@material-ui/core/Divider";
 import { Typography } from "@material-ui/core";
 import { useFindAllRoomsQuery } from "../../src/generated/graphql";
 import { emitRoomSelected } from "../../socket";
-import RoomContext from  "../../context/RoomContext";
+import { RoomContext } from "../../context/RoomContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,6 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function RoomList() {
   const classes = useStyles();
 
+  const context = useContext(RoomContext)
+
   const [selectedRoom, setSelectedRoom] = useState("");
 
   const {data, error, loading} = useFindAllRoomsQuery()
@@ -37,6 +39,7 @@ export default function RoomList() {
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     newRoom: string
   ) => {
+    context.setRoomSelected(newRoom)
     setSelectedRoom(newRoom);
     emitRoomSelected(selectedRoom, newRoom);
   };
@@ -45,7 +48,6 @@ export default function RoomList() {
 
   return (
     
-    <RoomContext.Provider value={selectedRoom}>
     <div className={classes.root}>
       <Typography variant="h6" className={classes.title}>
         Rooms
@@ -68,6 +70,5 @@ export default function RoomList() {
         {error && <span>Error</span>}
         </List>
     </div>
-    </RoomContext.Provider>
   );
 }

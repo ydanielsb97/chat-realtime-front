@@ -7,9 +7,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import Message from "./Message";
-import React from "react";
+import React, { useContext } from "react";
 import InputMessage from "./InputMessage";
 import BoxMessages from "./BoxMessages";
+import { RoomContext } from "../../context/RoomContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,11 +36,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const LeftColumn = () => {
   const classes = useStyles();
+  
+  const { roomSelected } = useContext(RoomContext)
+
   return (
     <div className={classes.root}>
       <div>
         <Typography variant="h6" className={classes.title}>
-          Messages
+          {roomSelected || "Select a Room"}
         </Typography>
         <Divider />
       </div>

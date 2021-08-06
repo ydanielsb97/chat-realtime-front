@@ -5,7 +5,10 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { MessageI } from "../../interface/Message.interface";
+import { getNewMessage } from "../../socket";
+
 
 const useStyles = makeStyles({
   root: {},
@@ -21,7 +24,10 @@ const useStyles = makeStyles({
 });
 
 const Message = (props: any) => {
+  
   const classes = useStyles();
+
+
   return (
     <div className={props.className}>
       <Card variant="outlined" className={classes.card}>
